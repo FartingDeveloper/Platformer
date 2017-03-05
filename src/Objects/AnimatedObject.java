@@ -37,17 +37,24 @@ public abstract class AnimatedObject extends GameObject {
         this.animationTextures = textures;
     }
 
-    @Override
     public void render(Graphics g) {
-        if(health > 0){
-            if(position) g.drawImage(texture, (int)x,(int)y, null);
-            else g.drawImage(mirror(texture), (int)x,(int)y, null);
-        }
+        if(position) g.drawImage(texture, (int)x,(int)y, null);
+        else g.drawImage(mirror(texture), (int)x,(int)y, null);
+
+//        Graphics2D g2d = (Graphics2D) g;
+//        g2d.setColor(Color.BLUE);
+//        g2d.draw(getBounds());
+//        g2d.draw(getBoundsRight());
+//        g2d.draw(getBoundsLeft());
+//        g2d.draw(getBoundsKickRight());
+//        g2d.draw(getBoundsKickLeft());
+//        g2d.draw(getBoundsLegKickRight());
+//        g2d.draw(getBoundsLegKickLeft());
     }
 
-    private BufferedImage mirror(BufferedImage image){
+    protected BufferedImage mirror(BufferedImage image){
         AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
-        tx.translate(-texture.getWidth(null), 0);
+        tx.translate(-image.getWidth(null), 0);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         image = op.filter(image, null);
         return image;
@@ -99,18 +106,32 @@ public abstract class AnimatedObject extends GameObject {
     public abstract Rectangle getBoundsTop();
 
     protected void kickParameter(AnimatedObject object){
-        if(object.getKickedCount() == 3){
+        object.setHealth(object.getHealth() - 20);
+
+        if(object.getHealth() <= 0){
+            object.setDead(true);
+            object.setFalling(true);
             if(position){
-                object.setVelX(1);
+                object.setVelX(6);
             }
             else {
-                object.setVelX(-1);
+                object.setVelX(-6);
             }
+            object.setVelY(-2);
         }
-        else object.setVelX(0);
+        else {
+            if(object.getKickedCount() == 3){
+                if(position){
+                    object.setVelX(1);
+                }
+                else {
+                    object.setVelX(-1);
+                }
+            }
+            else object.setVelX(0);
+        }
 
         object.setKicked(true);
-        object.setHealth(object.getHealth() - 10);
         object.setCount(0);
     }
 
@@ -153,5 +174,9 @@ public abstract class AnimatedObject extends GameObject {
 
     public boolean isDead() {
         return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
     }
 }

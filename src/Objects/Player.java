@@ -24,19 +24,19 @@ public class Player extends AnimatedObject implements KeyListener{
 
     @Override
     public void update() {
-        if(!dead){
-            x += velX;
-            y += velY;
+        x += velX;
+        y += velY;
 
-            if(falling){
-                velY += gravity;
-            }
-
-            collision();
-
-            index++;
-            animation();
+        if(falling){
+            velY += gravity;
         }
+
+
+        collision();
+
+
+        index++;
+        animation();
     }
 
     protected void collision(){
@@ -48,7 +48,7 @@ public class Player extends AnimatedObject implements KeyListener{
                     break;
                 case Enemy:
                     Enemy enemy = (Enemy) object;
-                    if(!kicked && !enemy.isKick()){
+                    if(!kicked && !enemy.isKick() && !enemy.isKicked() && !enemy.isDead()){
                         if(kick){
                             if (getBoundsKickLeft().intersects(enemy.getBoundsRight()) || getBoundsKickRight().intersects(enemy.getBoundsLeft())) {
                                 this.enemy = enemy;
@@ -65,6 +65,12 @@ public class Player extends AnimatedObject implements KeyListener{
     }
 
     protected void animation(){
+
+        if(dead){
+            diedAnimation();
+            return;
+        }
+
         if(kicked){
             kickedAnimation();
             return;
@@ -189,6 +195,22 @@ public class Player extends AnimatedObject implements KeyListener{
                 velX = 0;
                 kicked = false;
                 count = 0;
+            }
+        }
+    }
+
+    private void diedAnimation(){
+        if(index > speed - 7){
+            index = 0;
+            if(count < 3){
+                texture = animationTextures.get("died_up")[0][count++];
+            }
+            if(count >=3 && count < 6){
+                texture = animationTextures.get("died_down")[0][count++ - 3];
+            }
+            if(count >= 6){
+                texture = animationTextures.get("died_down")[0][2];
+                velX = 0;
             }
         }
     }

@@ -27,25 +27,25 @@ public class Enemy extends AnimatedObject {
 
     @Override
     public void update() {
-        if(!dead){
-            x += velX;
-            y += velY;
-            length++;
 
-            if(falling){
-                velY += gravity;
-            }
+        x += velX;
+        y += velY;
+        length++;
 
-            if(!triggered && length == 150){
-                velX = -velX;
-                position = !position;
-                length = 0;
-            }
-
-            index++;
-            collision();
-            animation();
+        if(falling){
+            velY += gravity;
         }
+
+        if(!triggered && length == 150 && !dead){
+            velX = -velX;
+            position = !position;
+            length = 0;
+        }
+
+        collision();
+
+        index++;
+        animation();
     }
 
     @Override
@@ -57,43 +57,55 @@ public class Enemy extends AnimatedObject {
                     break;
                 case Player:
                     Player player = (Player) object;
-                    if ((player.getX() - x) < 150 && (player.getX() - x) > 0 && !player.isKicked() && !legKick && !kick && !kicked) {
-                        position = true;
-                        velX = 1;
-                        triggered = true;
-                    } else if ((player.getX() - x) > -150 && (player.getX() - x) < 0 && !player.isKicked() && !legKick && !kick && !kicked) {
-                        position = false;
-                        velX = -1;
-                        triggered = true;
-                    } else {
-                        triggered = false;
+                    if(!dead){
+                        if ((player.getX() - x) < 150 && (player.getX() - x) > 0 && !player.isKicked() && !legKick && !kick && !kicked) {
+                            position = true;
+                            velX = 1;
+                            triggered = true;
+                        } else if ((player.getX() - x) > -150 && (player.getX() - x) < 0 && !player.isKicked() && !legKick && !kick && !kicked) {
+                            position = false;
+                            velX = -1;
+                            triggered = true;
+                        } else {
+                            triggered = false;
 //                        if(velX == 0) turnVelOn();
-                        return;
-                    }
+                            return;
+                        }
 
-                    if (!player.isKicked() && triggered) {
-                        boolean kickCount = hit();
-                        if (kickCount) {
-                            if (!player.isKick() && !kick) {
-                                if (getBoundsKickLeft().intersects(player.getBoundsRight())) {
-                                    kick = true;
-                                    position = false;
-                                    count = 0;
-                                    velX = 0;
-                                    this.player = player;
+                        if (!player.isKicked() && triggered && !player.isDead()) {
+                            if (!player.isKick() && !kick){
+                                boolean kickCount = new Random().nextBoolean();
+                                if (kickCount) {
+                                    if (getBoundsKickLeft().intersects(player.getBoundsRight())) {
+                                        kick = true;
+                                        position = false;
+                                        count = 0;
+                                        velX = 0;
+                                        this.player = player;
+                                    }
+                                    if (getBoundsKickRight().intersects(player.getBoundsLeft())) {
+                                        kick = true;
+                                        position = true;
+                                        count = 0;
+                                        velX = 0;
+                                        this.player = player;
+                                    }
                                 }
-                                if (getBoundsKickRight().intersects(player.getBoundsLeft())) {
-                                    kick = true;
-                                    position = true;
-                                    count = 0;
-                                    velX = 0;
-                                    this.player = player;
-                                }
-                            } else {
-                                if ((getBoundsLegKickLeft().intersects(player.getBoundsRight()) || getBoundsLegKickRight().intersects(player.getBoundsLeft())) && !player.isKick() && !player.isKicked()) {
-                                    legKick = !kickCount;
-                                    velX = 0;
-                                    this.player = player;
+                                else {
+                                    if (getBoundsLegKickLeft().intersects(player.getBoundsRight())){
+                                        legKick = true;
+                                        position = false;
+                                        count = 0;
+                                        velX = 0;
+                                        this.player = player;
+                                    }
+                                    if(getBoundsLegKickRight().intersects(player.getBoundsLeft())){
+                                        legKick = true;
+                                        position = true;
+                                        count = 0;
+                                        velX = 0;
+                                        this.player = player;
+                                    }
                                 }
                             }
                         }
@@ -108,11 +120,6 @@ public class Enemy extends AnimatedObject {
         position = !position;
     }
 
-    private boolean hit(){
-        Random rand = new Random();
-        return rand.nextBoolean();
-    }
-
     private void checkPlayer(){
         if(player != null){
             kickParameter(player);
@@ -121,6 +128,11 @@ public class Enemy extends AnimatedObject {
     }
 
     protected void animation(){
+        if(dead){
+            diedAnimation();
+            return;
+        }
+
         if(kicked){
             kickedAnimation();
             return;
@@ -130,6 +142,7 @@ public class Enemy extends AnimatedObject {
             else if(legKick) legKickAnimation();
             else texture = animationTextures.get("walking")[0][0];
         }
+
         if(abs(velX) > 0 && velY == 0){
             walkAnimation();
         }
@@ -240,6 +253,22 @@ public class Enemy extends AnimatedObject {
         }
     }
 
+    private void diedAnimation(){
+        if(index > speed){
+            index = 0;
+            if(count < 3){
+                texture = animationTextures.get("died_up")[0][count++];
+            }
+            if(count >=3 && count < 6){
+                texture = animationTextures.get("died_down")[0][count++ - 3];
+            }
+            if(count >= 6){
+                texture = animationTextures.get("died_down")[0][2];
+                velX = 0;
+            }
+        }
+    }
+
     public Rectangle getBounds(){
         return new Rectangle((int) x + width/4, (int) y + height*5/6, width/2, height/10);
     }
@@ -257,19 +286,19 @@ public class Enemy extends AnimatedObject {
     }
 
     public Rectangle getBoundsKickRight(){
-        return new Rectangle((int) x + width*3/4, (int) y + height*2/6, width/2, height*1/6);
+        return new Rectangle((int) x + width*3/4, (int) y + height*1/6, width/2 - 2, height*1/6);
     }
 
     public Rectangle getBoundsKickLeft(){
-        return new Rectangle((int) x - 10, (int) y + height*2/6, width/2, height*1/6);
+        return new Rectangle((int) x - 7, (int) y + height*1/6, width/2 - 2, height*1/6);
     }
 
     public Rectangle getBoundsLegKickRight(){
-        return new Rectangle((int) x + width*3/4, (int) y + height*2/6, width/2, height*1/6);
+        return new Rectangle((int) x + width*3/4, (int) y + height*2/6, width/2 - 2, height*1/6);
     }
 
     public Rectangle getBoundsLegKickLeft(){
-        return new Rectangle((int) x - 10, (int) y + height*2/6, width/2, height*1/6);
+        return new Rectangle((int) x - 7, (int) y + height*2/6, width/2 - 2, height*1/6);
     }
 
 }

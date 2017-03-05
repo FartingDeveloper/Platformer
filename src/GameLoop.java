@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.List;
 
 import Objects.*;
+import javafx.scene.layout.Background;
 
 
 /**
@@ -13,9 +14,12 @@ import Objects.*;
 public class GameLoop extends JComponent {
 
     private Player player;
-    private boolean initialize = false;
     private List<GameObject> objects;
     private BufferedImage background;
+    private BufferedImage[] backgroundArr;
+    private int backgroundCount;
+
+    private boolean initialize = false;
 
     private Thread thread = new Thread(){
         @Override
@@ -23,23 +27,21 @@ public class GameLoop extends JComponent {
             double frapTime = 1000000000 / 60; //Количество времени необходимое на обработку 1 кадра
             long currentTime = System.nanoTime();
             double delta = 0;
-            int frames = 0;
             long timer = System.currentTimeMillis();
-            while(true){
+            while(true || !player.isDead()){
                 long now = System.nanoTime();
                 delta += (now - currentTime) / frapTime;
                 while(delta >= 1){
                     updateLogic();
                     delta--;
-                    frames++;
                 }
 
                 repaint();
 
-                if(System.currentTimeMillis() - timer > 1000){
-                    System.out.println("FPS:" + frames);
-                    timer += 1000;
-                    frames = 0;
+                if(System.currentTimeMillis() - timer > 500){
+                    background = backgroundArr[backgroundCount++];
+                    if(backgroundCount == backgroundArr.length) backgroundCount = 0;
+                    timer += 500;
                 }
 
                 currentTime = now;
@@ -55,23 +57,15 @@ public class GameLoop extends JComponent {
     private void init(){
         initialize = true;
 
-        Texture texture = new Texture(400,320,"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\stone.jpg");
-        LevelLoader loader = new LevelLoader("C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\map.png", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2.jpg", texture);
-        loader.loadLevel();
-        background = loader.getBackground();
-        objects = loader.getObjects();
+        String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_1.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_2.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_3.jpg"};
 
-//        Texture playerTextureRight = new Texture(155, 311, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\a.png");
-//        Texture playerTextureLeft = new Texture(155, 311, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\b.png");
-//        Texture playerTextureRightKick = new Texture(212, 311, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\kick_right.png");
-//        Texture playerTextureLeftKick = new Texture(212, 311, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\kick_left.png");
-//        BufferedImage[][][] playerTextures = {playerTextureRight.getTextures(), playerTextureLeft.getTextures(), playerTextureRightKick.getTextures(), playerTextureLeftKick.getTextures()};
-//
-//        Texture enTex = new Texture(155, 311, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\a.png");
-//        Texture enKick = new Texture(212, 311, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\kick_right.png");
-//        BufferedImage[][][] en = {enTex.getTextures(), enKick.getTextures()};
-//        Enemy enemi = new Enemy(100, 100, 155, 311, objects, GameObjectId.Enemy, enTex.getTextures()[0][3], en);
-//        objects.add(enemi);
+        String[] texturePath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\stone.jpg"};
+
+        LevelLoader loader = new LevelLoader("C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\map.png", backPath, texturePath);
+        loader.loadLevel();
+        backgroundArr = loader.getBackground();
+        background = backgroundArr[backgroundCount];
+        objects = loader.getObjects();
 
         HashMap<String, BufferedImage[][]> playerTextures = new HashMap<>();
         Texture playerTextureStandingRight = new Texture(48, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\standing.png");
@@ -92,6 +86,10 @@ public class GameLoop extends JComponent {
         playerTextures.put("kicked_first", playerTextureKickedFirst.getTextures());
         Texture playerTextureKickedSecond = new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\kicked_second.png");
         playerTextures.put("kicked_second", playerTextureKickedSecond.getTextures());
+        Texture playerDiedUp = new Texture(72, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\died_up.png");
+        playerTextures.put("died_up", playerDiedUp.getTextures());
+        Texture playerDiedDown = new Texture(83, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\died_down.png");
+        playerTextures.put("died_down", playerDiedDown.getTextures());
         player = new Player(0, 298, 48,  105, objects, GameObjectId.Player, playerTextureStandingRight.getTextures()[0][0], playerTextures);
 //        player = new Player(400, 100, 155, 311, objects, GameObjectId.Player, playerTextureRight.getTextures()[0][3], playerTextures);
         this.addKeyListener(player);
@@ -115,7 +113,6 @@ public class GameLoop extends JComponent {
             for(int x = -background.getWidth(); x < background.getWidth()*20; x += background.getWidth()) g.drawImage(background, x, 0, null);
 
             for(GameObject object : objects) object.render(g);
-
 
             if(player.getHealth() > 0){
                 g.setColor(Color.RED);
