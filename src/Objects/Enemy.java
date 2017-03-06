@@ -11,14 +11,14 @@ import static java.lang.Math.abs;
 /**
  * Created by HP PC on 27.02.2017.
  */
-public class Enemy extends AnimatedObject {
+public abstract class Enemy extends AnimatedObject {
 
-    private boolean triggered = false;
+    protected boolean triggered = false;
 
-    private int length = 0;
+    protected int length = 0;
 
-    private boolean kickNumber = true;
-    private Player player;
+    protected boolean kickNumber = true;
+    protected Player player;
 
     public Enemy(float x, float y, int width, int height, java.util.List<GameObject> objects, GameObjectId id, BufferedImage texture, HashMap<String, BufferedImage[][]> textures) {
         super(x, y, width, height, objects, id, texture, textures);
@@ -120,152 +120,10 @@ public class Enemy extends AnimatedObject {
         position = !position;
     }
 
-    private void checkPlayer(){
+    protected void checkPlayer(){
         if(player != null){
             kickParameter(player);
             player = null;
-        }
-    }
-
-    protected void animation(){
-        if(dead){
-            diedAnimation();
-            return;
-        }
-
-        if(kicked){
-            kickedAnimation();
-            return;
-        }
-        if(velX == 0 && velY == 0){
-            if(kick) handKickAnimation();
-            else if(legKick) legKickAnimation();
-            else texture = animationTextures.get("walking")[0][0];
-        }
-
-        if(abs(velX) > 0 && velY == 0){
-            walkAnimation();
-        }
-    }
-
-    private void walkAnimation(){
-        if(index > speed) {
-            index = 0;
-            texture = animationTextures.get("walking")[0][count++];
-            if (count == 5) count = 0;
-        }
-    }
-
-    private void handKickAnimation(){
-        if(index > speed - 7){
-            index = 0;
-            if(kickNumber) {
-                texture = animationTextures.get("kick")[0][count++];
-                if (count == 4) {
-                    count = 0;
-                    kick = false;
-                    kickNumber = !kickNumber;
-                    checkPlayer();
-                }
-            }
-            else {
-                texture = animationTextures.get("kick_2")[0][count++];
-                if(count == 3){
-                    count = 0;
-                    kick = false;
-                    kickNumber = !kickNumber;
-                    checkPlayer();
-                }
-            }
-        }
-    }
-
-    private void legKickAnimation(){
-        if(index > speed - 5){
-            index = 0;
-            texture = animationTextures.get("leg_kick")[0][count++];
-            if(count == 3){
-                count = 0;
-                legKick = false;
-                checkPlayer();
-            }
-        }
-    }
-
-    private void kickedAnimation(){
-        switch (kickedCount){
-            case 1:{
-                kickedFirst();
-                break;
-            }
-            case 2:{
-                kickedSecond();
-                break;
-            }
-            case 3:{
-                kickedFinish();
-                break;
-            }
-        }
-    }
-
-    private void kickedFirst(){
-        if(index > speed +5) {
-            index = 0;
-            texture = animationTextures.get("kicked_first")[0][count++];
-            if (count == 2) {
-                velX = 0;
-                kicked = false;
-                kickedCount++;
-                count = 0;
-            }
-        }
-    }
-
-    private void kickedSecond(){
-        if(index > speed + 5) {
-            index = 0;
-            texture = animationTextures.get("kicked_second")[0][count++];
-            if(count == 2){
-                velX = 0;
-                kicked = false;
-                kickedCount++;
-                count = 0;
-            }
-        }
-    }
-
-    private void kickedFinish(){
-        if(index > speed) {
-            index = 0;
-            if(count < 3){
-                texture = animationTextures.get("kicked_final_1")[0][count++];
-            }
-            if(count >= 3 && count < 7){
-                texture = animationTextures.get("kicked_final_2")[0][-3 + count++];
-            }
-            if (count == 7){
-                kickedCount = 1;
-                velX = 0;
-                kicked = false;
-                count = 0;
-            }
-        }
-    }
-
-    private void diedAnimation(){
-        if(index > speed){
-            index = 0;
-            if(count < 3){
-                texture = animationTextures.get("died_up")[0][count++];
-            }
-            if(count >=3 && count < 6){
-                texture = animationTextures.get("died_down")[0][count++ - 3];
-            }
-            if(count >= 6){
-                texture = animationTextures.get("died_down")[0][2];
-                velX = 0;
-            }
         }
     }
 

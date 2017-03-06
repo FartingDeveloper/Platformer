@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 /**
  * Created by HP PC on 27.02.2017.
  */
@@ -99,7 +101,37 @@ public abstract class AnimatedObject extends GameObject {
         }
     }
 
-    protected abstract void animation();
+    protected void animation(){
+
+        if(dead){
+            diedAnimation();
+            return;
+        }
+
+        if(kicked){
+            kickedAnimation();
+            return;
+        }
+
+        if(velX == 0 && velY == 0){
+            if(kick) handKickAnimation();
+            else if(legKick) legKickAnimation();
+            else texture = animationTextures.get("walking")[0][0];
+        }
+
+        if(abs(velX) > 0 && velY == 0){
+            walkAnimation();
+        }
+    }
+
+    protected abstract void walkAnimation();
+    protected abstract void handKickAnimation();
+    protected abstract void legKickAnimation();
+    protected abstract void kickedAnimation();
+    protected abstract void kickedFirst();
+    protected abstract void kickedSecond();
+    protected abstract void kickedFinish();
+    protected abstract void diedAnimation();
 
     public abstract Rectangle getBoundsLeft();
     public abstract Rectangle getBoundsRight();

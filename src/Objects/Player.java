@@ -64,30 +64,14 @@ public class Player extends AnimatedObject implements KeyListener{
         }
     }
 
-    protected void animation(){
-
-        if(dead){
-            diedAnimation();
-            return;
-        }
-
-        if(kicked){
-            kickedAnimation();
-            return;
-        }
-
-        if(velX == 0 && velY == 0){
-            if(kick) handKickAnimation();
-            else if(legKick) legKickAnimation();
-            else texture = animationTextures.get("walking")[0][0];
-        }
-
-        if(abs(velX) > 0 && velY == 0){
-            walkAnimation();
+    private void checkEnemy(){
+        if(enemy != null){
+            kickParameter(enemy);
+            enemy = null;
         }
     }
 
-    private void walkAnimation(){
+    protected void walkAnimation(){
         if(index > speed) {
             index = 0;
             texture = animationTextures.get("walking")[0][count++];
@@ -95,7 +79,7 @@ public class Player extends AnimatedObject implements KeyListener{
         }
     }
 
-    private void handKickAnimation(){
+    protected void handKickAnimation(){
         if(index > speed - 7){
             index = 0;
             if(kickNumber) {
@@ -119,14 +103,7 @@ public class Player extends AnimatedObject implements KeyListener{
         }
     }
 
-    private void checkEnemy(){
-        if(enemy != null){
-            kickParameter(enemy);
-            enemy = null;
-        }
-    }
-
-    private void legKickAnimation(){
+    protected void legKickAnimation(){
         if(index > speed - 5){
             index = 0;
             texture = animationTextures.get("leg_kick")[0][count++];
@@ -138,7 +115,7 @@ public class Player extends AnimatedObject implements KeyListener{
         }
     }
 
-    private void kickedAnimation(){
+    protected void kickedAnimation(){
         switch (kickedCount){
             case 1:{
                 kickedFirst();
@@ -155,7 +132,7 @@ public class Player extends AnimatedObject implements KeyListener{
         }
     }
 
-    private void kickedFirst(){
+    protected void kickedFirst(){
         if(index > speed +5) {
             index = 0;
             texture = animationTextures.get("kicked_first")[0][count++];
@@ -168,7 +145,7 @@ public class Player extends AnimatedObject implements KeyListener{
         }
     }
 
-    private void kickedSecond(){
+    protected void kickedSecond(){
         if(index > speed + 5) {
             index = 0;
             texture = animationTextures.get("kicked_second")[0][count++];
@@ -181,7 +158,7 @@ public class Player extends AnimatedObject implements KeyListener{
         }
     }
 
-    private void kickedFinish(){
+    protected void kickedFinish(){
         if(index > speed) {
             index = 0;
             if(count < 3){
@@ -199,7 +176,7 @@ public class Player extends AnimatedObject implements KeyListener{
         }
     }
 
-    private void diedAnimation(){
+    protected void diedAnimation(){
         if(index > speed - 7){
             index = 0;
             if(count < 3){
@@ -214,58 +191,6 @@ public class Player extends AnimatedObject implements KeyListener{
             }
         }
     }
-
-//    private void walkAnimationLeft(){
-//        if(index > speed){
-//            index = 0;
-//            texture = animationTextures.get("walking_left")[0][5 - count++];
-//            if(6 - count == 0) count = 0;
-//        }
-//    }
-//
-//    private void handKickAnimationLeft(){
-//        if(index > speed - 4){
-//            index = 0;
-////            if(kickNumber) {
-////                texture = animationTextures.get("kick_left")[0][3 - count++];
-////                if (count == 4) {
-////                    count = 0;
-////                    kick = false;
-////                    kickNumber = !kickNumber;
-////                }
-////            }
-////            else {
-//                texture = animationTextures.get("kick_left_2")[0][2 - count++];
-//                if(count == 3){
-//                    count = 0;
-//                    kick = false;
-////                    kickNumber = !kickNumber;
-//                }
-////            }
-//        }
-//    }
-//
-//    private void legKickAnimationLeft(){
-//        if(index > speed - 7){
-//            index = 0;
-//            if(count < 4){
-//                texture = animationTextures.get("leg_kick_left")[0][3 - count++];
-//                return;
-//            }
-//            if (count == 4) {
-//                texture = animationTextures.get("leg_kick_finish_left")[0][0];
-//                count++;
-//                return;
-//            }
-//            if(count > 4){
-//                texture = animationTextures.get("leg_kick_left")[0][count++ - 5];
-//                if(count == 9){
-//                    count = 0;
-//                    legKick = false;
-//                }
-//            }
-//        }
-//    }
 
     public Rectangle getBounds(){
         return new Rectangle((int) x + width/4, (int) y + height*5/6, width/2, height/10);
