@@ -25,28 +25,28 @@ public abstract class Enemy extends AnimatedObject {
         velX = 1;
     }
 
-//    @Override
-//    public void update() {
-//
-//        x += velX;
-//        y += velY;
-//        length++;
-//
-//        if(falling){
-//            velY += gravity;
-//        }
-//
-//        if(!triggered && length == 150 && !dead){
-//            velX = -velX;
-//            position = !position;
-//            length = 0;
-//        }
-//
-//        collision();
-//
-//        index++;
-//        animation();
-//    }
+    @Override
+    public void update() {
+
+        x += velX;
+        y += velY;
+        length++;
+
+        if(falling){
+            velY += gravity;
+        }
+
+        if(!triggered && length == 150 && !dead){
+            velX = -velX;
+            position = !position;
+            length = 0;
+        }
+
+        collision();
+
+        index++;
+        animation();
+    }
 
     @Override
     protected void collision() {
@@ -148,7 +148,7 @@ public abstract class Enemy extends AnimatedObject {
     }
 
     public Rectangle getBoundsKickLeft(){
-        return new Rectangle((int) x - 7, (int) y + height*1/6, width/2 - 2, height*1/6);
+        return new Rectangle((int) x - 3, (int) y + height*1/6, width/2 - 2, height*1/6);
     }
 
     public Rectangle getBoundsLegKickRight(){
@@ -156,7 +156,7 @@ public abstract class Enemy extends AnimatedObject {
     }
 
     public Rectangle getBoundsLegKickLeft(){
-        return new Rectangle((int) x - 7, (int) y + height*2/6, width/2 - 2, height*1/6);
+        return new Rectangle((int) x - 3, (int) y + height*2/6, width/2 - 2, height*1/6);
     }
 
 }

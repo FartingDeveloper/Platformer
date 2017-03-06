@@ -13,11 +13,6 @@ public class Chinese extends Enemy {
         super(x, y, width, height, objects, id, texture, textures);
     }
 
-    public void update() {
-        kickedFinish();
-        index++;
-    }
-
     protected void walkAnimation(){
         if(index > speed) {
             index = 0;
