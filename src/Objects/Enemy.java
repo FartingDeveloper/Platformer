@@ -58,18 +58,16 @@ public abstract class Enemy extends AnimatedObject {
                 case Player:
                     Player player = (Player) object;
                     if(!dead){
-                        if ((player.getX() - x) < 150 && (player.getX() - x) > 0 && !player.isKicked() && !legKick && !kick && !kicked) {
+                        if ((player.getX() - x) <= 150 && (player.getX() - x) >= 0 && !player.isKicked() && !legKick && !kick && !kicked) {
                             position = true;
                             velX = 1;
                             triggered = true;
-                        } else if ((player.getX() - x) > -150 && (player.getX() - x) < 0 && !player.isKicked() && !legKick && !kick && !kicked) {
+                        } else if ((player.getX() - x) >= -150 && (player.getX() - x) <= 0 && !player.isKicked() && !legKick && !kick && !kicked) {
                             position = false;
                             velX = -1;
                             triggered = true;
                         } else {
                             triggered = false;
-//                        if(velX == 0) turnVelOn();
-                            return;
                         }
 
                         if (!player.isKicked() && triggered && !player.isDead()) {
@@ -117,7 +115,6 @@ public abstract class Enemy extends AnimatedObject {
     private void turnVelOn(){
         if(position) velX = 1;
         else velX = -1;
-        position = !position;
     }
 
     protected void checkPlayer(){
@@ -144,19 +141,19 @@ public abstract class Enemy extends AnimatedObject {
     }
 
     public Rectangle getBoundsKickRight(){
-        return new Rectangle((int) x + width*3/4, (int) y + height*1/6, width/2 - 2, height*1/6);
+        return new Rectangle((int) x + width*3/4 - 5, (int) y + height*1/6, width/2, height*1/6);
     }
 
     public Rectangle getBoundsKickLeft(){
-        return new Rectangle((int) x - 3, (int) y + height*1/6, width/2 - 2, height*1/6);
+        return new Rectangle((int) x - 5, (int) y + height*1/6, width/2, height*1/6);
     }
 
     public Rectangle getBoundsLegKickRight(){
-        return new Rectangle((int) x + width*3/4, (int) y + height*2/6, width/2 - 2, height*1/6);
+        return new Rectangle((int) x + width*3/4 - 5, (int) y + height*2/6, width/2, height*1/6);
     }
 
     public Rectangle getBoundsLegKickLeft(){
-        return new Rectangle((int) x - 3, (int) y + height*2/6, width/2 - 2, height*1/6);
+        return new Rectangle((int) x - 5, (int) y + height*2/6, width/2, height*1/6);
     }
 
 }
