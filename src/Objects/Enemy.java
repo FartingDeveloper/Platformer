@@ -25,28 +25,28 @@ public abstract class Enemy extends AnimatedObject {
         velX = 1;
     }
 
-    @Override
-    public void update() {
-
-        x += velX;
-        y += velY;
-        length++;
-
-        if(falling){
-            velY += gravity;
-        }
-
-        if(!triggered && length == 150 && !dead){
-            velX = -velX;
-            position = !position;
-            length = 0;
-        }
-
-        collision();
-
-        index++;
-        animation();
-    }
+//    @Override
+//    public void update() {
+//
+//        x += velX;
+//        y += velY;
+//        length++;
+//
+//        if(falling){
+//            velY += gravity;
+//        }
+//
+//        if(!triggered && length == 150 && !dead){
+//            velX = -velX;
+//            position = !position;
+//            length = 0;
+//        }
+//
+//        collision();
+//
+//        index++;
+//        animation();
+//    }
 
     @Override
     protected void collision() {

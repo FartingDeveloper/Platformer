@@ -153,11 +153,23 @@ public abstract class AnimatedObject extends GameObject {
         }
         else {
             if(object.getKickedCount() == 3){
-                if(position){
-                    object.setVelX(1);
+                if(object.getClass() == Player.class){
+                    if(position){
+                        object.setVelX(1);
+                    }
+                    else {
+                        object.setVelX(-1);
+                    }
                 }
-                else {
-                    object.setVelX(-1);
+                if(object.getClass() == Chinese.class){
+                    if(position){
+                        object.setVelX(5);
+                    }
+                    else {
+                        object.setVelX(-5);
+                    }
+                    object.setVelY(-3);
+                    object.setFalling(true);
                 }
             }
             else object.setVelX(0);
