@@ -163,12 +163,12 @@ public abstract class AnimatedObject extends GameObject {
                 }
                 if(object.getClass() == Chinese.class){
                     if(position){
-                        object.setVelX(5);
+                        object.setVelX(6);
                     }
                     else {
-                        object.setVelX(-5);
+                        object.setVelX(-6);
                     }
-                    object.setVelY(-3);
+                    object.setVelY(-5);
                     object.setFalling(true);
                 }
             }
@@ -214,6 +214,10 @@ public abstract class AnimatedObject extends GameObject {
 
     public boolean isPosition() {
         return position;
+    }
+
+    public void setPosition(boolean position) {
+        this.position = position;
     }
 
     public boolean isDead() {

@@ -37,6 +37,7 @@ public abstract class Enemy extends AnimatedObject {
         }
 
         if(!triggered && length == 150 && !dead){
+            if(velX == 0) turnVelOn();
             velX = -velX;
             position = !position;
             length = 0;
@@ -141,19 +142,19 @@ public abstract class Enemy extends AnimatedObject {
     }
 
     public Rectangle getBoundsKickRight(){
-        return new Rectangle((int) x + width*3/4 - 5, (int) y + height*1/6, width/2, height*1/6);
+        return new Rectangle((int) x + width*3/4 - 8, (int) y + height*1/6, width/2, height*1/6);
     }
 
     public Rectangle getBoundsKickLeft(){
-        return new Rectangle((int) x - 5, (int) y + height*1/6, width/2, height*1/6);
+        return new Rectangle((int) x - 8, (int) y + height*1/6, width/2, height*1/6);
     }
 
     public Rectangle getBoundsLegKickRight(){
-        return new Rectangle((int) x + width*3/4 - 5, (int) y + height*2/6, width/2, height*1/6);
+        return new Rectangle((int) x + width*3/4 - 2, (int) y + height*2/6, width/2, height*1/6);
     }
 
     public Rectangle getBoundsLegKickLeft(){
-        return new Rectangle((int) x - 5, (int) y + height*2/6, width/2, height*1/6);
+        return new Rectangle((int) x - 8, (int) y + height*2/6, width/2, height*1/6);
     }
 
 }

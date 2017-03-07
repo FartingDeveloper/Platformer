@@ -6,6 +6,7 @@ import java.util.List;
 
 import Objects.*;
 import javafx.scene.layout.Background;
+import sun.audio.AudioPlayer;
 
 
 /**
@@ -18,6 +19,11 @@ public class GameLoop extends JComponent {
     private BufferedImage background;
     private BufferedImage[] backgroundArr;
     private int backgroundCount;
+
+    private Font font = new Font("Impact", Font.PLAIN, 24);
+    private Color color = new Color(1, 1, 1, 0.65f);
+    private int hour = 10;
+    private int minute = 13;
 
     private boolean initialize = false;
 
@@ -38,10 +44,13 @@ public class GameLoop extends JComponent {
 
                 repaint();
 
-                if(System.currentTimeMillis() - timer > 500){
-                    background = backgroundArr[backgroundCount++];
-                    if(backgroundCount == backgroundArr.length) backgroundCount = 0;
-                    timer += 500;
+                if(System.currentTimeMillis() - timer > 1000){
+                    background = backgroundArr[backgroundCount];
+                    backgroundCount = new Random().nextInt(backgroundArr.length);
+                    timer += 1000;
+                    if(timer % 6000 == 0){
+                        minute++;
+                    }
                 }
 
                 currentTime = now;
@@ -56,49 +65,23 @@ public class GameLoop extends JComponent {
 
     private void init(){
         initialize = true;
-
-        String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_1.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_2.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_3.jpg"};
+        String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS.jpg"};
+//        String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_1.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_2.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_3.jpg"};
 
         String[] texturePath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\stone.jpg"};
 
-        LevelLoader loader = new LevelLoader("C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\map.png", backPath, texturePath);
+        String musicPath = "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\theme.wav";
+
+        LevelLoader loader = new LevelLoader("C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\map.png", backPath, texturePath, musicPath);
         loader.loadLevel();
-        backgroundArr = loader.getBackground();
-        background = backgroundArr[backgroundCount];
+
+        player = loader.getPlayer();
+        this.addKeyListener(player);
+
         objects = loader.getObjects();
 
-        HashMap<String, BufferedImage[][]> chineseTextures = new HashMap<>();
-        Texture chineseTextureStandingRight = new Texture(48, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\standing.png");
-        chineseTextures.put("standing", chineseTextureStandingRight.getTextures());
-        chineseTextures.put("walking", new Texture(50, 99, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\walking.png").getTextures());
-        chineseTextures.put("kick", new Texture(59, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kick.png").getTextures());
-        chineseTextures.put("kick_second", new Texture(55, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kick_second.png").getTextures());
-        chineseTextures.put("leg_kick", new Texture(64, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\leg_kick.png").getTextures());
-        chineseTextures.put("kicked_first", new Texture(50, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kicked_first.png").getTextures());
-        chineseTextures.put("kicked_second", new Texture(50, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kicked_second.png").getTextures());
-        chineseTextures.put("kicked_final", new Texture(47, 102, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kicked_final_standing.png").getTextures());
-        chineseTextures.put("died_down", new Texture(88, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\died_down.png").getTextures());
-        chineseTextures.put("died_up", new Texture(61, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\died_up.png").getTextures());
-        Enemy enemy = new Chinese(300, 298, 48,  105, objects, GameObjectId.Enemy, chineseTextureStandingRight.getTextures()[0][0], chineseTextures);
-        objects.add(enemy);
-
-        HashMap<String, BufferedImage[][]> playerTextures = new HashMap<>();
-        Texture playerTextureStandingRight = new Texture(48, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\standing.png");
-        playerTextures.put("standing", playerTextureStandingRight.getTextures());
-        playerTextures.put("walking", new Texture(42, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\walking.png").getTextures());
-        playerTextures.put("kick", new Texture(60, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kick.png").getTextures());
-        playerTextures.put("kick_2", new Texture(58, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kick_2.png").getTextures());
-        playerTextures.put("leg_kick", new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\leg_kick.png").getTextures());
-        playerTextures.put("kicked_final_1", new Texture(47, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_final_1.png").getTextures());
-        playerTextures.put("kicked_final_2", new Texture(47, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_final_2.png").getTextures());
-        playerTextures.put("kicked_first",new Texture(56, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_first.png").getTextures());
-        playerTextures.put("kicked_second", new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_second.png").getTextures());
-        playerTextures.put("died_up", new Texture(72, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\died_up.png").getTextures());
-        playerTextures.put("died_down", new Texture(83, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\died_down.png").getTextures());
-        player = new Player(0, 298, 48,  105, objects, GameObjectId.Player, playerTextureStandingRight.getTextures()[0][0], playerTextures);
-//        player = new Player(400, 100, 155, 311, objects, GameObjectId.Player, playerTextureRight.getTextures()[0][3], playerTextures);
-        this.addKeyListener(player);
-        objects.add(player);
+        backgroundArr = loader.getBackground();
+        background = backgroundArr[backgroundCount];
     }
 
     private void updateLogic(){
@@ -121,6 +104,13 @@ public class GameLoop extends JComponent {
                 g.setColor(Color.RED);
                 g.fillRect((int)player.getX() - player.getWidth()*2, 30, player.getHealth(), 10);
             }
+
+            Graphics2D g2d = (Graphics2D)g;
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2d.setColor(color);
+            g2d.setFont(font);
+            g2d.drawString("PM " + hour + ":" + minute, player.getX() - player.getWidth()*2, 500);
+            g2d.drawString("MAR. 03 1984", player.getX() - player.getWidth()*2, 530);
 
             g.dispose();
         }
