@@ -141,6 +141,7 @@ public abstract class AnimatedObject extends GameObject {
         object.setHealth(object.getHealth() - 20);
 
         if(object.getHealth() <= 0){
+            if(object.getClass() == Chinese.class) Player.increaseKillCount();
             object.setDead(true);
             object.setFalling(true);
             if(position){

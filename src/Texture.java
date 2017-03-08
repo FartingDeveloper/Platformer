@@ -12,22 +12,16 @@ public class Texture {
     private int height;
     private int width;
     private BufferedImage[][] textures;
+    private BufferedImage texture;
 
-    public Texture(int width, int height, String path){
+    public Texture(int width, int height, String path) {
         this.height = height;
         this.width = width;
-        loadTextureImage(path);
+        texture = ImageLoader.loadImage(path);
+        loadTextureImage();
     }
 
-    private void loadTextureImage(String texturePath){
-        BufferedImage texture = null;
-        try {
-            File file = new File(texturePath);
-            texture = ImageIO.read(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    private void loadTextureImage(){
         textures = new BufferedImage[texture.getHeight()/height+1][texture.getWidth()/width+1];
 
         for(int y = 1; y <= texture.getHeight()/height; y++){

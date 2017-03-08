@@ -9,6 +9,7 @@ import java.util.List;
  * Created by HP PC on 06.03.2017.
  */
 public class Chinese extends Enemy {
+
     public Chinese(float x, float y, int width, int height, List<GameObject> objects, GameObjectId id, BufferedImage texture, HashMap<String, BufferedImage[][]> textures) {
         super(x, y, width, height, objects, id, texture, textures);
     }

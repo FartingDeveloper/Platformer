@@ -18,6 +18,8 @@ public class Player extends AnimatedObject implements KeyListener{
     private boolean kickNumber = true;
     private Enemy enemy;
 
+    private static int killCount = 0;
+
     public Player(float x, float y, int width, int height, java.util.List<GameObject> objects, GameObjectId id, BufferedImage texture, HashMap<String, BufferedImage[][]> textures) {
         super(x, y, width, height, objects, id,texture, textures);
     }
@@ -224,7 +226,13 @@ public class Player extends AnimatedObject implements KeyListener{
         return new Rectangle((int) x - 10, (int) y + height*2/6, width/2, height*1/6);
     }
 
+    public static int getKillCount() {
+        return killCount;
+    }
 
+    public static void increaseKillCount() {
+        killCount++;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -256,6 +264,9 @@ public class Player extends AnimatedObject implements KeyListener{
                 velX = 0;
                 count = 0;
             }
+        }
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+
         }
     }
 

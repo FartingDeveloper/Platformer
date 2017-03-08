@@ -6,6 +6,9 @@ import java.awt.*;
  */
 public class Main {
     public static void main(String[] args) {
+        String musicPath = "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\theme.wav";
+        Sound sound = new Sound(musicPath);
+
         Dimension dim = new Dimension(800, 540);
 
         GameLoop loop = new GameLoop();
@@ -20,6 +23,7 @@ public class Main {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         loop.start();
+        sound.start();
 
         frame.setVisible(true);
 

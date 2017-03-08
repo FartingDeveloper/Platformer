@@ -24,34 +24,13 @@ public class LevelLoader {
     private HashMap<String, BufferedImage[][]> playerTextures = new HashMap<>();
     private Player player;
 
-    public LevelLoader(String path, String[] backgroundPath, String[] textures, String musicPath){
+    public LevelLoader(String path, String[] backgroundPath, String[] textures){
         backgroundImages = new BufferedImage[backgroundPath.length];
 
-        loadImage(path);
-        loadBack(backgroundPath);
+        levelImage = ImageLoader.loadImage(path);
+        backgroundImages = ImageLoader.loadImages(backgroundPath);
         loadTextures(textures);
         loadCharactersTextures();
-        loadMusicPath(musicPath);
-    }
-
-    private void loadImage(String path){
-        try {
-            File file = new File(path);
-            levelImage = ImageIO.read(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadBack(String[] path){
-        for(int i = 0; i < path.length; i++){
-            try {
-                File file = new File(path[i]);
-                backgroundImages[i] = ImageIO.read(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void loadTextures(String[] path){
@@ -92,40 +71,12 @@ public class LevelLoader {
         chineseTextures.put("died_up", new Texture(61, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\died_up.png").getTextures());
     }
 
-    //Скопипастил А ееее
-    private void loadMusicPath(String musicPath){
-        try {
-            File soundFile = new File(musicPath); //Звуковой файл
-
-            //Получаем AudioInputStream
-            //Вот тут могут полететь IOException и UnsupportedAudioFileException
-            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
-
-            //Получаем реализацию интерфейса Clip
-            //Может выкинуть LineUnavailableException
-            Clip clip = AudioSystem.getClip();
-
-            //Загружаем наш звуковой поток в Clip
-            //Может выкинуть IOException и LineUnavailableException
-            clip.open(ais);
-
-            clip.setFramePosition(0); //устанавливаем указатель на старт
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-
-        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException exc) {
-            exc.printStackTrace();
-        }
-    }
-
     private Texture textureFabric(String name, String path){
         Texture texture = null;
         switch (name){
             case "stone":{
                 texture = new Texture(400,320, path);
                 break;
-            }
-            case "enemy":{
-
             }
         }
         return texture;
