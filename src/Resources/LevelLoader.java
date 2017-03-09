@@ -14,7 +14,9 @@ import java.util.Random;
  */
 public class LevelLoader {
 
-    private BufferedImage levelImage;
+    private int width;
+    private int height;
+
     private BufferedImage[] backgroundImages;
 
     private List<GameObject> objects = new ArrayList<>();
@@ -23,10 +25,13 @@ public class LevelLoader {
     private HashMap<String, BufferedImage[][]> playerTextures = new HashMap<>();
     private Player player;
 
-    public LevelLoader(String path, String[] backgroundPath, String[] textures){
+    public LevelLoader(int width, int height, String[] backgroundPath, String[] textures, List<GameObject> objects){
+        this.width = width;
+        this.height = height;
+        this.objects = objects;
+
         backgroundImages = new BufferedImage[backgroundPath.length];
 
-        levelImage = ImageLoader.loadImage(path);
         backgroundImages = ImageLoader.loadImages(backgroundPath);
         loadTextures(textures);
         loadCharactersTextures();
@@ -44,30 +49,30 @@ public class LevelLoader {
     }
 
     private void loadCharactersTextures(){
-        Texture playerTextureStandingRight = new Texture(48, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\standing.png");
+        Texture playerTextureStandingRight = new Texture(48, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\standing.png");
         playerTextures.put("standing", playerTextureStandingRight.getTextures());
-        playerTextures.put("walking", new Texture(42, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\walking.png").getTextures());
-        playerTextures.put("kick", new Texture(60, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\kick.png").getTextures());
-        playerTextures.put("kick_2", new Texture(58, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\kick_2.png").getTextures());
-        playerTextures.put("leg_kick", new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\leg_kick.png").getTextures());
-        playerTextures.put("kicked_final_1", new Texture(47, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\kicked_final_1.png").getTextures());
-        playerTextures.put("kicked_final_2", new Texture(47, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\kicked_final_2.png").getTextures());
-        playerTextures.put("kicked_first",new Texture(56, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\kicked_first.png").getTextures());
-        playerTextures.put("kicked_second", new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\kicked_second.png").getTextures());
-        playerTextures.put("died_up", new Texture(72, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\died_up.png").getTextures());
-        playerTextures.put("died_down", new Texture(83, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\player\\died_down.png").getTextures());
+        playerTextures.put("walking", new Texture(42, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\walking.png").getTextures());
+        playerTextures.put("kick", new Texture(60, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kick.png").getTextures());
+        playerTextures.put("kick_2", new Texture(58, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kick_2.png").getTextures());
+        playerTextures.put("leg_kick", new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\leg_kick.png").getTextures());
+        playerTextures.put("kicked_final_1", new Texture(47, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_final_1.png").getTextures());
+        playerTextures.put("kicked_final_2", new Texture(47, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_final_2.png").getTextures());
+        playerTextures.put("kicked_first",new Texture(56, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_first.png").getTextures());
+        playerTextures.put("kicked_second", new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_second.png").getTextures());
+        playerTextures.put("died_up", new Texture(72, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\died_up.png").getTextures());
+        playerTextures.put("died_down", new Texture(83, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\died_down.png").getTextures());
 
-        Texture chineseTextureStandingRight = new Texture(48, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\standing.png");
+        Texture chineseTextureStandingRight = new Texture(48, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\standing.png");
         chineseTextures.put("standing", chineseTextureStandingRight.getTextures());
-        chineseTextures.put("walking", new Texture(50, 99, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\walking.png").getTextures());
-        chineseTextures.put("kick", new Texture(59, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\kick.png").getTextures());
-        chineseTextures.put("kick_second", new Texture(55, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\kick_second.png").getTextures());
-        chineseTextures.put("leg_kick", new Texture(64, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\leg_kick.png").getTextures());
-        chineseTextures.put("kicked_first", new Texture(50, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\kicked_first.png").getTextures());
-        chineseTextures.put("kicked_second", new Texture(50, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\kicked_second.png").getTextures());
-        chineseTextures.put("kicked_final", new Texture(47, 102, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\kicked_final_standing.png").getTextures());
-        chineseTextures.put("died_down", new Texture(88, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\died_down.png").getTextures());
-        chineseTextures.put("died_up", new Texture(61, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\chinese\\died_up.png").getTextures());
+        chineseTextures.put("walking", new Texture(50, 99, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\walking.png").getTextures());
+        chineseTextures.put("kick", new Texture(59, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kick.png").getTextures());
+        chineseTextures.put("kick_second", new Texture(55, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kick_second.png").getTextures());
+        chineseTextures.put("leg_kick", new Texture(64, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\leg_kick.png").getTextures());
+        chineseTextures.put("kicked_first", new Texture(50, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kicked_first.png").getTextures());
+        chineseTextures.put("kicked_second", new Texture(50, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kicked_second.png").getTextures());
+        chineseTextures.put("kicked_final", new Texture(47, 102, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\kicked_final_standing.png").getTextures());
+        chineseTextures.put("died_down", new Texture(88, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\died_down.png").getTextures());
+        chineseTextures.put("died_up", new Texture(61, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\chinese\\died_up.png").getTextures());
     }
 
     private Texture textureFabric(String name, String path){
@@ -92,7 +97,9 @@ public class LevelLoader {
         return name;
     }
 
-    public void loadLevel(){
+    public void loadLevel(String mapPath){
+        BufferedImage levelImage = ImageLoader.loadImage(mapPath);
+
         for(int x = 0; x < levelImage.getWidth(); x++){
             for(int y = 0; y < levelImage.getHeight(); y++){
                 int pix = levelImage.getRGB(x, y);
@@ -115,6 +122,48 @@ public class LevelLoader {
             }
         }
         objects.add(player);
+    }
+
+    public void loadLevel(){
+        for(int x = 0; x < 25; x++){
+            objects.add(new Block(x*32 ,13*32, 32, 32, GameObjectId.Block, textures.get("stone").getTextures()[0][0]));
+        }
+        objects.add(new Chinese(width-100, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
+        objects.add(new Chinese(width-300, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
+        objects.add(new Chinese(width*2-200, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
+
+        player = new Player(100, 200, 48,  105, objects, GameObjectId.Player, playerTextures.get("standing")[0][0], playerTextures);
+        objects.add(player);
+    }
+
+    public Block getLastBlock(){
+        Block block = null;
+        int x = 0;
+        for(GameObject object : objects){
+            if(object.getId() == GameObjectId.Block){
+                Block tmp = (Block) object;
+                if(tmp.getX() >= x){
+                    x = (int) tmp.getX();
+                    block = tmp;
+                }
+            }
+        }
+        return block;
+    }
+
+    public Block getFirstBlock(){
+        Block block = null;
+        int x =(int) objects.get(0).getX();
+        for(GameObject object : objects){
+            if(object.getId() == GameObjectId.Block){
+                Block tmp = (Block) object;
+                if(tmp.getX() <= x){
+                    x = (int) tmp.getX();
+                    block = tmp;
+                }
+            }
+        }
+        return block;
     }
 
     public BufferedImage[] getBackground(){

@@ -132,6 +132,7 @@ public class Chinese extends Enemy {
             if(count >= 4){
                 texture = animationTextures.get("died_down")[0][count++ - 4];
                 if(count == 6){
+                    kicked = false;
                     count = 5;
                     texture = animationTextures.get("died_down")[0][1];
                     velX = 0;

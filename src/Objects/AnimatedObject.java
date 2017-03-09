@@ -141,7 +141,7 @@ public abstract class AnimatedObject extends GameObject {
         object.setHealth(object.getHealth() - 20);
 
         if(object.getHealth() <= 0){
-            if(object.getClass() == Chinese.class) Player.increaseKillCount();
+            if(object.getId() == GameObjectId.Enemy) Player.increaseKillCount();
             object.setDead(true);
             object.setFalling(true);
             if(position){
@@ -227,5 +227,6 @@ public abstract class AnimatedObject extends GameObject {
 
     public void setDead(boolean dead) {
         this.dead = dead;
+        count = 0;
     }
 }

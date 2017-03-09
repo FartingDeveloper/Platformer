@@ -12,13 +12,18 @@ import Resources.LevelLoader;
  * Created by HP PC on 24.02.2017.
  */
 public class Game extends JComponent implements Runnable{
+
     private Menu menu;
+    private LevelLoader loader;
 
     private Player player;
-    private List<GameObject> objects;
+    private List<GameObject> objects = new ArrayList<GameObject>();
     private BufferedImage background;
+    private BufferedImage screen;
     private BufferedImage[] backgroundArr;
     private int backgroundCount = 0;
+
+    private int camera;
 
     private Font font = new Font("Impact", Font.PLAIN, 32);
     private Color color = new Color(1, 1, 1, 0.65f);
@@ -30,25 +35,28 @@ public class Game extends JComponent implements Runnable{
     private Thread thread = new Thread(this);
 
     public Game(){
-        String[] menuPath ={"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\start.png"};
+        String[] menuPath ={"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\start.png"};
 
         menu = new Menu(menuPath);
         this.addMouseListener(menu);
 
-        String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\city2_VHS.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\city2_VHS_2.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\city2_VHS_3.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\tv_screen.png"};
+        String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS_2.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS_3.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\tv_screen.png"};
 
-        String[] texturePath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\stone.jpg"};
+        String[] texturePath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\stone.jpg"};
 
-        LevelLoader loader = new LevelLoader("C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\map.png", backPath, texturePath);
+        loader = new LevelLoader(800, 540, backPath, texturePath, objects);
+//        loader.loadLevel("C:\\Users\\HP PC\\IntelliJIDEAProjects\Game\\res\\map.png");
+
         loader.loadLevel();
 
         player = loader.getPlayer();
         this.addKeyListener(player);
 
-        objects = loader.getObjects();
-
         backgroundArr = loader.getBackground();
         background = backgroundArr[0];
+        screen = backgroundArr[backgroundArr.length - 1];
+
+        camera = (int) player.getX() - player.getWidth()*4;
     }
 
     @Override
@@ -88,13 +96,65 @@ public class Game extends JComponent implements Runnable{
     private void updateLogic(){
         if(!pause){
             for(GameObject object : objects) object.update();
+            moveLevel();
+            addEnemy();
         }
+    }
+
+    private void moveLevel(){
+        for(GameObject object : objects){
+            if (object.getId() == GameObjectId.Block){
+                if((object.getX() + object.getWidth()) < camera){
+                    Block lastBlock = loader.getLastBlock();
+                    object.setX((int) (lastBlock.getX() + lastBlock.getWidth()));
+                    continue;
+                }
+                if((object.getX() + object.getWidth()) > camera + getWidth()){
+                    Block firstBlock = loader.getFirstBlock();
+                    object.setX((int) (firstBlock.getX() - firstBlock.getWidth()));
+                }
+            }
+        }
+    }
+
+    private void resurrectDead(){
+        for(GameObject object : objects){
+            if(object.getId() == GameObjectId.Enemy){
+                Enemy enemy = (Enemy) object;
+                if(enemy.isDead()){
+                    if(enemy.getX() + enemy.getWidth() < camera || enemy.getX()+enemy.getWidth() > camera + getWidth()){
+                        enemy.setDead(false);
+                        enemy.setHealth(100);
+                        enemy.setX(camera + getWidth()*2 - 200);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void addEnemy(){
+//        int i = 0;
+//        for(GameObject object : objects){
+//            if(object.getId() == GameObjectId.Enemy){
+//                Enemy enemy = (Enemy) object;
+//                if(!enemy.isDead()){
+//                    if(enemy.getX() + enemy.getWidth() > camera && enemy.getX()+enemy.getWidth() < camera + getWidth()){
+//                        i++;
+//                    }
+//                }
+//            }
+//        }
+
+        resurrectDead();
 
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        camera = (int) player.getX() - player.getWidth()*4;
 
         if(!pause){
             setFocusable(true);
@@ -105,12 +165,15 @@ public class Game extends JComponent implements Runnable{
             renderMenu(g);
         }
 
-        g.drawImage(backgroundArr[backgroundArr.length - 1], (int) player.getX() - player.getWidth()*4, 0 , getWidth(), getHeight(), null);// Рамка
+        g.drawImage(screen, camera, 0 , getWidth(), getHeight(), null);// Рамка
+
+        g.dispose();
 
     }
 
     private void renderGame(Graphics g){
-        g.translate(-(int) player.getX() + player.getWidth()*4, 0);
+
+        g.translate(-camera, 0);
 
         for(int x = -background.getWidth(); x < background.getWidth()*100; x += background.getWidth()){
             g.drawImage(background, x, 0, null);
@@ -130,15 +193,14 @@ public class Game extends JComponent implements Runnable{
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setColor(color);
         g2d.setFont(font);
-        g2d.drawString("PM " + hour + ":" + minute, player.getX() - player.getWidth()*2, 480);
-        g2d.drawString("MAR. 03 1984", player.getX() - player.getWidth()*2, 510);
+//        g2d.drawString("PM " + hour + ":" + minute, player.getX() - player.getWidth()*2, 480);
+//        g2d.drawString("MAR. 03 1984", player.getX() - player.getWidth()*2, 510);
         g2d.drawString("" + Player.getKillCount(), player.getX() + player.getWidth()*4, 60);
 
-        g.dispose();
     }
 
     private void renderMenu(Graphics g){
-
+        menu.render(g);
     }
 
     public static boolean isPause() {
