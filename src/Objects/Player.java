@@ -1,14 +1,12 @@
 package Objects;
 
+import Game.Game;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-
-import static java.lang.Math.abs;
 
 /**
  * Created by HP PC on 25.02.2017.
@@ -266,7 +264,7 @@ public class Player extends AnimatedObject implements KeyListener{
             }
         }
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-
+            Game.setPause(true);
         }
     }
 

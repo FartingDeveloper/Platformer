@@ -1,3 +1,7 @@
+package Game;
+
+import Resources.Sound;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -6,12 +10,12 @@ import java.awt.*;
  */
 public class Main {
     public static void main(String[] args) {
-        String musicPath = "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\theme.wav";
+        String musicPath = "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game.Game\\res\\theme.wav";
         Sound sound = new Sound(musicPath);
 
         Dimension dim = new Dimension(800, 540);
 
-        GameLoop loop = new GameLoop();
+        Game loop = new Game();
         loop.setPreferredSize(dim);
         loop.setFocusable(true);
 
@@ -26,6 +30,5 @@ public class Main {
         sound.start();
 
         frame.setVisible(true);
-
     }
 }

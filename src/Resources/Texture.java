@@ -1,8 +1,6 @@
+package Resources;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by HP PC on 26.02.2017.

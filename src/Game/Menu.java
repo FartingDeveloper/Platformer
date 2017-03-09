@@ -1,22 +1,26 @@
+package Game;
+
+import Resources.ImageLoader;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by HP PC on 08.03.2017.
+ * Created by HP PC on 09.03.2017.
  */
 public class Menu implements MouseListener {
 
-    private BufferedImage menu;
+    private BufferedImage[] menu;
     private Rectangle startGame = new Rectangle(200, 200, 200, 200);
 
-    public Menu(String path) {
-        menu = ImageLoader.loadImage(path);
+    public Menu(String[] path) {
+        menu = ImageLoader.loadImages(path);
     }
 
     public void render(Graphics g) {
-        g.drawImage(menu, (int)startGame.getX(), (int)startGame.getY(), null);
+        g.drawImage(menu[0], (int)startGame.getX(), (int)startGame.getY(), null);
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.draw(startGame);
@@ -27,6 +31,7 @@ public class Menu implements MouseListener {
         int x = e.getX();
         int y = e.getY();
         if (x >= startGame.getX() && x <= (startGame.getX() + startGame.getWidth()) && y >= startGame.getY() && y <= (startGame.getY() + startGame.getHeight())) {
+            Game.setPause(false);
         }
     }
 
