@@ -131,8 +131,8 @@ public class LevelLoader {
 
         Random random = new Random();
 
-        for(int i = 0; i < random.nextInt(4); i++){
-            objects.add(new Chinese(random.nextInt(width) + i*50, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
+        for(int i = 0; i < random.nextInt(3) + 1; i++){
+            objects.add(new Chinese(100 + random.nextInt(width) + i*50, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
         }
 
         player = new Player(100, 200, 48,  105, objects, GameObjectId.Player, playerTextures.get("standing")[0][0], playerTextures);

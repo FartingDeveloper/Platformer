@@ -2,11 +2,16 @@ package Game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 import Objects.*;
+import Resources.ImageLoader;
 import Resources.LevelLoader;
+
+import static java.lang.System.exit;
 
 /**
  * Created by HP PC on 24.02.2017.
@@ -27,8 +32,6 @@ public class Game extends JComponent implements Runnable{
 
     private Font font = new Font("Impact", Font.PLAIN, 32);
     private Color color = new Color(1, 1, 1, 0.65f);
-    private int hour = 10;
-    private int minute = 13;
 
     private static boolean pause = true;
 
@@ -37,7 +40,7 @@ public class Game extends JComponent implements Runnable{
     public Game(){
         String[] menuPath ={"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_second.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_retry.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_continue.jpg"};
 
-        menu = new Menu(800, 540, menuPath);
+        menu = new Menu(menuPath);
         this.addMouseListener(menu);
 
         String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS_2.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS_3.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\tv_screen.png"};
@@ -80,9 +83,6 @@ public class Game extends JComponent implements Runnable{
                 backgroundCount = new Random().nextInt(backgroundArr.length - 1);
                 background = backgroundArr[backgroundCount++];
                 if(backgroundCount == backgroundArr.length - 1) backgroundCount = 0;
-                if(timer % 6000 == 0){
-                    minute++;
-                }
             }
 
             currentTime = now;
@@ -103,10 +103,6 @@ public class Game extends JComponent implements Runnable{
             if(!menu.isFirstTime()){
                 if(player.isDead()){
                     menu.setMenu(2);
-                    objects = loader.loadLevel();
-                    player = loader.getPlayer();
-                    player.setKillCount(0);
-                    this.addKeyListener(player);
                 }
                 else menu.setMenu(3);
             }
@@ -210,11 +206,98 @@ public class Game extends JComponent implements Runnable{
         menu.render(g, camera);
     }
 
-    public static boolean isPause() {
-        return pause;
-    }
-
     public static void setPause(boolean pause) {
         Game.pause = pause;
+    }
+
+    private class Menu implements MouseListener {
+
+        private boolean firstTime = true;
+        private int index = 0;
+
+        private BufferedImage[] menu;
+        private int count;
+        private Rectangle start = new Rectangle(200, 250, 210, 75);
+        private Rectangle exit = new Rectangle(200, 350, 200, 75);
+
+        public Menu(String[] path) {
+            menu = ImageLoader.loadImages(path);
+        }
+
+        public void render(Graphics g, int camera) {
+            index++;
+
+            if(firstTime && count < 2){
+                menuAnimation();
+            }
+
+            g.drawImage(menu[count], camera, 0, getWidth(), getHeight(), null);
+            start.x = camera + 300;
+            exit.x = camera + 300;
+
+//        Graphics2D g2d = (Graphics2D) g;
+//        g2d.setColor(Color.BLUE);
+//        g2d.draw(start);
+//        g2d.draw(exit);
+        }
+
+        private void menuAnimation(){
+            count = 0;
+            if(index > 50){
+                count = 1 - count;
+                index = 45;
+            }
+        }
+
+        public void setMenu(int i){
+            count = i;
+            firstTime = false;
+        }
+
+        public boolean isFirstTime() {
+            return firstTime;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+
+            if (x >= start.getX() && x <= (start.getX() + start.getWidth()) && y >= start.getY() && y <= (start.getY() + start.getHeight())) {
+                if(count == 2){
+                    objects = loader.loadLevel();
+                    player.setKillCount(0);
+                    player = loader.getPlayer();
+                    addKeyListener(player);
+                }
+                pause = false;
+                firstTime = false;
+            }
+            if (x >= exit.getX() && x <= (exit.getX() + exit.getWidth()) && y >= exit.getY() && y <= (exit.getY() + exit.getHeight())) {
+                exit(0);
+            }
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+
     }
 }
