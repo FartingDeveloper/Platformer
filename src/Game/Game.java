@@ -30,14 +30,14 @@ public class Game extends JComponent implements Runnable{
     private int hour = 10;
     private int minute = 13;
 
-    private static boolean pause = false;
+    private static boolean pause = true;
 
     private Thread thread = new Thread(this);
 
     public Game(){
-        String[] menuPath ={"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\start.png"};
+        String[] menuPath ={"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_second.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_retry.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_continue.jpg"};
 
-        menu = new Menu(menuPath);
+        menu = new Menu(800, 540, menuPath);
         this.addMouseListener(menu);
 
         String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS_2.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS_3.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\tv_screen.png"};
@@ -65,7 +65,7 @@ public class Game extends JComponent implements Runnable{
         long currentTime = System.nanoTime();
         double delta = 0;
         long timer = System.currentTimeMillis();
-        while(true || !player.isDead()){
+        while(true){
             long now = System.nanoTime();
             delta += (now - currentTime) / frapTime;
             while(delta >= 1){
@@ -98,6 +98,12 @@ public class Game extends JComponent implements Runnable{
             for(GameObject object : objects) object.update();
             moveLevel();
             addEnemy();
+        }
+        else{
+            if(!menu.isFirstTime()){
+                if(player.isDead()) menu.setMenu(2);
+                else menu.setMenu(3);
+            }
         }
     }
 
@@ -156,14 +162,11 @@ public class Game extends JComponent implements Runnable{
 
         camera = (int) player.getX() - player.getWidth()*4;
 
-        if(!pause){
-            setFocusable(true);
-            renderGame(g);
-        }
-        else {
-            setFocusable(false);
-            renderMenu(g);
-        }
+        g.translate(-camera, 0);
+
+        if(!pause) renderGame(g);
+
+        else renderMenu(g);
 
         g.drawImage(screen, camera, 0 , getWidth(), getHeight(), null);// Рамка
 
@@ -172,8 +175,6 @@ public class Game extends JComponent implements Runnable{
     }
 
     private void renderGame(Graphics g){
-
-        g.translate(-camera, 0);
 
         for(int x = -background.getWidth(); x < background.getWidth()*100; x += background.getWidth()){
             g.drawImage(background, x, 0, null);
@@ -200,7 +201,7 @@ public class Game extends JComponent implements Runnable{
     }
 
     private void renderMenu(Graphics g){
-        menu.render(g);
+        menu.render(g, camera);
     }
 
     public static boolean isPause() {
