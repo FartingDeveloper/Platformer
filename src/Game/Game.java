@@ -44,10 +44,10 @@ public class Game extends JComponent implements Runnable{
 
         String[] texturePath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\stone.jpg"};
 
-        loader = new LevelLoader(800, 540, backPath, texturePath, objects);
+        loader = new LevelLoader(800, 540, backPath, texturePath);
 //        loader.loadLevel("C:\\Users\\HP PC\\IntelliJIDEAProjects\Game\\res\\map.png");
 
-        loader.loadLevel();
+        objects = loader.loadLevel();
 
         player = loader.getPlayer();
         this.addKeyListener(player);
@@ -101,7 +101,13 @@ public class Game extends JComponent implements Runnable{
         }
         else{
             if(!menu.isFirstTime()){
-                if(player.isDead()) menu.setMenu(2);
+                if(player.isDead()){
+                    menu.setMenu(2);
+                    objects = loader.loadLevel();
+                    player = loader.getPlayer();
+                    player.setKillCount(0);
+                    this.addKeyListener(player);
+                }
                 else menu.setMenu(3);
             }
         }
@@ -131,7 +137,7 @@ public class Game extends JComponent implements Runnable{
                     if(enemy.getX() + enemy.getWidth() < camera || enemy.getX()+enemy.getWidth() > camera + getWidth()){
                         enemy.setDead(false);
                         enemy.setHealth(100);
-                        enemy.setX(camera + getWidth()*2 - 200);
+                        enemy.setX(camera + getWidth() + new Random().nextInt(200));
                         return;
                     }
                 }

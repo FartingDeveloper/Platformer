@@ -188,6 +188,7 @@ public class Player extends AnimatedObject implements KeyListener{
             if(count >= 6){
                 texture = animationTextures.get("died_down")[0][2];
                 velX = 0;
+                Game.setPause(true);
             }
         }
     }
@@ -230,6 +231,10 @@ public class Player extends AnimatedObject implements KeyListener{
 
     public static void increaseKillCount() {
         killCount++;
+    }
+
+    public static void setKillCount(int kill) {
+        killCount = kill;
     }
 
     @Override

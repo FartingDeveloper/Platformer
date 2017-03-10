@@ -69,11 +69,10 @@ public class Menu implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        if(count == 3 || count < 2){
-            if (x >= start.getX() && x <= (start.getX() + start.getWidth()) && y >= start.getY() && y <= (start.getY() + start.getHeight())) {
+
+        if (x >= start.getX() && x <= (start.getX() + start.getWidth()) && y >= start.getY() && y <= (start.getY() + start.getHeight())) {
                 Game.setPause(false);
                 firstTime = false;
-            }
         }
         if (x >= exit.getX() && x <= (exit.getX() + exit.getWidth()) && y >= exit.getY() && y <= (exit.getY() + exit.getHeight())) {
             exit(0);

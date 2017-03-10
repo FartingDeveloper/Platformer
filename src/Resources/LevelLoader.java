@@ -19,16 +19,15 @@ public class LevelLoader {
 
     private BufferedImage[] backgroundImages;
 
-    private List<GameObject> objects = new ArrayList<>();
+    private List<GameObject> objects;
     private HashMap<String, Texture> textures = new HashMap<>();
     private HashMap<String, BufferedImage[][]> chineseTextures = new HashMap<>();
     private HashMap<String, BufferedImage[][]> playerTextures = new HashMap<>();
     private Player player;
 
-    public LevelLoader(int width, int height, String[] backgroundPath, String[] textures, List<GameObject> objects){
+    public LevelLoader(int width, int height, String[] backgroundPath, String[] textures){
         this.width = width;
         this.height = height;
-        this.objects = objects;
 
         backgroundImages = new BufferedImage[backgroundPath.length];
 
@@ -53,7 +52,7 @@ public class LevelLoader {
         playerTextures.put("standing", playerTextureStandingRight.getTextures());
         playerTextures.put("walking", new Texture(42, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\walking.png").getTextures());
         playerTextures.put("kick", new Texture(60, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kick.png").getTextures());
-        playerTextures.put("kick_2", new Texture(58, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kick_2.png").getTextures());
+        playerTextures.put("kick_2", new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kick_2.png").getTextures());
         playerTextures.put("leg_kick", new Texture(57, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\leg_kick.png").getTextures());
         playerTextures.put("kicked_final_1", new Texture(47, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_final_1.png").getTextures());
         playerTextures.put("kicked_final_2", new Texture(47, 105, "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\player\\kicked_final_2.png").getTextures());
@@ -124,16 +123,21 @@ public class LevelLoader {
         objects.add(player);
     }
 
-    public void loadLevel(){
+    public List<GameObject> loadLevel(){
+        objects = new ArrayList<>();
         for(int x = 0; x < 25; x++){
             objects.add(new Block(x*32 ,13*32, 32, 32, GameObjectId.Block, textures.get("stone").getTextures()[0][0]));
         }
-        objects.add(new Chinese(width-100, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
-        objects.add(new Chinese(width-300, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
-        objects.add(new Chinese(width*2-200, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
+
+        Random random = new Random();
+
+        for(int i = 0; i < random.nextInt(4); i++){
+            objects.add(new Chinese(random.nextInt(width) + i*50, 200, 48,  105, objects, GameObjectId.Enemy, chineseTextures.get("standing")[0][0], chineseTextures));
+        }
 
         player = new Player(100, 200, 48,  105, objects, GameObjectId.Player, playerTextures.get("standing")[0][0], playerTextures);
         objects.add(player);
+        return objects;
     }
 
     public Block getLastBlock(){

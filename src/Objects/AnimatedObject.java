@@ -1,5 +1,7 @@
 package Objects;
 
+import Game.Game;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -142,6 +144,7 @@ public abstract class AnimatedObject extends GameObject {
 
         if(object.getHealth() <= 0){
             if(object.getId() == GameObjectId.Enemy) Player.increaseKillCount();
+
             object.setDead(true);
             object.setFalling(true);
             if(position){
