@@ -48,7 +48,7 @@ public class LevelLoader {
     }
 
     private void loadCharactersTextures(){
-        String pl = "player_";
+        String pl = "player/";
         Texture playerTextureStandingRight = new Texture(48, 105, pl + "standing.png");
         playerTextures.put("standing", playerTextureStandingRight.getTextures());
         playerTextures.put("walking", new Texture(42, 105, pl +"walking.png").getTextures());
@@ -62,7 +62,7 @@ public class LevelLoader {
         playerTextures.put("died_up", new Texture(72, 105, pl +"died_up.png").getTextures());
         playerTextures.put("died_down", new Texture(83, 105, pl +"died_down.png").getTextures());
 
-        String ch = "chinese_";
+        String ch = "chinese/";
         Texture chineseTextureStandingRight = new Texture(48, 105, ch + "standing.png");
         chineseTextures.put("standing", chineseTextureStandingRight.getTextures());
         chineseTextures.put("walking", new Texture(50, 99, ch +"walking.png").getTextures());

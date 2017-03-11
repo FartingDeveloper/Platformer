@@ -38,7 +38,7 @@ public class Game extends JComponent implements Runnable{
     private Thread thread = new Thread(this);
 
     public Game(){
-        String[] menuPath ={"opening.jpg", "opening_second.jpg", "opening_retry.jpg", "opening_continue.jpg"};
+        String[] menuPath ={"opening/opening.jpg", "opening/opening_second.jpg", "opening/opening_retry.jpg", "opening/opening_continue.jpg"};
 
         menu = new Menu(menuPath);
         this.addMouseListener(menu);
