@@ -1,14 +1,18 @@
-package Resources;
+package Loaders;
 
 import javax.sound.sampled.*;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by HP PC on 08.03.2017.
  */
 public class Sound {
-    Clip clip = null;
+
+    private ClassLoader cl = this.getClass().getClassLoader();
+    private Clip clip = null;
 
     public Sound(String musicPath){
         loadMusic(musicPath);
@@ -17,11 +21,11 @@ public class Sound {
     //Скопипастил А ееее
     private void loadMusic(String musicPath){
         try {
-            File soundFile = new File(musicPath); //Звуковой файл
-
+            InputStream is = cl.getResourceAsStream(musicPath);
+            InputStream bs = new BufferedInputStream(is);
             //Получаем AudioInputStream
             //Вот тут могут полететь IOException и UnsupportedAudioFileException
-            AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
+            AudioInputStream ais = AudioSystem.getAudioInputStream(bs);
 
             //Получаем реализацию интерфейса Clip
             //Может выкинуть LineUnavailableException

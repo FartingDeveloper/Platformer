@@ -8,8 +8,8 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 import Objects.*;
-import Resources.ImageLoader;
-import Resources.LevelLoader;
+import Loaders.ImageLoader;
+import Loaders.LevelLoader;
 
 import static java.lang.System.exit;
 
@@ -38,17 +38,17 @@ public class Game extends JComponent implements Runnable{
     private Thread thread = new Thread(this);
 
     public Game(){
-        String[] menuPath ={"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_second.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_retry.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\opening\\opening_continue.jpg"};
+        String[] menuPath ={"opening.jpg", "opening_second.jpg", "opening_retry.jpg", "opening_continue.jpg"};
 
         menu = new Menu(menuPath);
         this.addMouseListener(menu);
 
-        String[] backPath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS_2.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\city2_VHS_3.jpg", "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\tv_screen.png"};
+        String[] backPath = {"city2_VHS.jpg", "city2_VHS_2.jpg", "city2_VHS_3.jpg", "tv_screen.png"};
 
-        String[] texturePath = {"C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\stone.jpg"};
+        String[] texturePath = {"stone.jpg"};
 
         loader = new LevelLoader(800, 540, backPath, texturePath);
-//        loader.loadLevel("C:\\Users\\HP PC\\IntelliJIDEAProjects\Game\\res\\map.png");
+//        loader.loadLevel("res\\map.png");
 
         objects = loader.loadLevel();
 

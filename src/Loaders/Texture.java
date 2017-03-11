@@ -1,4 +1,4 @@
-package Resources;
+package Loaders;
 
 import java.awt.image.BufferedImage;
 

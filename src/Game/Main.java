@@ -1,6 +1,6 @@
 package Game;
 
-import Resources.Sound;
+import Loaders.Sound;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,8 @@ import java.awt.*;
  */
 public class Main {
     public static void main(String[] args) {
-        String musicPath = "C:\\Users\\HP PC\\IntelliJIDEAProjects\\Game\\res\\theme.wav";
+
+        String musicPath = "theme.wav";
         Sound sound = new Sound(musicPath);
 
         Dimension dim = new Dimension(800, 540);
