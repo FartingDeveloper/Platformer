@@ -72,7 +72,7 @@ public class Player extends AnimatedObject implements KeyListener{
     }
 
     protected void walkAnimation(){
-        if(index > speed) {
+        if(index > speed - 5) {
             index = 0;
             texture = animationTextures.get("walking")[0][count++];
             if (count == 5) count = 0;

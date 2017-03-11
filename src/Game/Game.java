@@ -100,6 +100,7 @@ public class Game extends JComponent implements Runnable{
             addEnemy();
         }
         else{
+            if(getMouseListeners() == null) addMouseListener(menu);
             if(!menu.isFirstTime()){
                 if(player.isDead()){
                     menu.setMenu(2);
@@ -260,6 +261,11 @@ public class Game extends JComponent implements Runnable{
 
         @Override
         public void mouseClicked(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
 
@@ -272,16 +278,11 @@ public class Game extends JComponent implements Runnable{
                 }
                 pause = false;
                 firstTime = false;
+                addMouseListener(null);
             }
             if (x >= exit.getX() && x <= (exit.getX() + exit.getWidth()) && y >= exit.getY() && y <= (exit.getY() + exit.getHeight())) {
                 exit(0);
             }
-
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-
         }
 
         @Override
